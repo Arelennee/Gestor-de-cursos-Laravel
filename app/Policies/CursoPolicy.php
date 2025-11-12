@@ -29,7 +29,7 @@ class CursoPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->esProfesor() || $user->esAdmin();
     }
 
     /**
@@ -37,15 +37,19 @@ class CursoPolicy
      */
     public function update(User $user, Curso $curso): bool
     {
-        return $user->id === $curso->user_id;
+        return $user->id === $curso->user_id || $user->esAdmin();
     }
 
     /**
      * Determine whether the user can delete the model.
+     *
+     * @param User $user
+     * @param Curso $curso
+     * @return bool
      */
     public function delete(User $user, Curso $curso): bool
     {
-        return $user->id === $curso->user_id;
+        return $user->id === $curso->user_id || $user->esAdmin();
     }
 
     /**
@@ -53,7 +57,7 @@ class CursoPolicy
      */
     public function restore(User $user, Curso $curso): bool
     {
-        return $user->id === $curso->user_id;
+        return $user->id === $curso->user_id || $user->esAdmin();
     }
 
     /**
@@ -61,6 +65,6 @@ class CursoPolicy
      */
     public function forceDelete(User $user, Curso $curso): bool
     {
-        return $user->id === $curso->user_id;
+        return $user->id === $curso->user_id || $user->esAdmin();
     }
 }
