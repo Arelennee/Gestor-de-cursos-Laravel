@@ -77,6 +77,12 @@ class User extends Authenticatable
     public function cursosInscritos(){
         return $this->belongsToMany(Curso::class, 'inscripciones');
     }
+
+    public function leccionesCompletadas()
+    {
+        return $this->belongsToMany(Leccion::class, 'leccion_user')->withTimestamps();
+    }
+
     public function comentarios(){
         return $this->hasMany(Comentario::class);
     }

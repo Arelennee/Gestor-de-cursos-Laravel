@@ -46,9 +46,8 @@ class LeccionController extends Controller
      */
     public function show(Leccion $leccion)
     {
-        // Aquí retornarías la vista para mostrar la lección
-        // return view('lecciones.show', compact('leccion'));
-        return "Viendo la lección: " . $leccion->titulo;
+        $this->authorize('view', $leccion->curso);
+        return view('lecciones.show', compact('leccion'));
     }
 
     /**
@@ -96,5 +95,18 @@ class LeccionController extends Controller
         // Redirigir a la página del curso con un mensaje
         // return redirect()->route('cursos.show', $curso)->with('success', 'Lección eliminada exitosamente.');
         return "Lección eliminada.";
+    }
+
+    /**
+     * Marca una lección como completada para el usuario autenticado.
+     */
+    public function complete(Request $request, Leccion $leccion)
+    {
+        $this->authorize('view', $leccion->curso);
+
+        $user = $request->user();
+        $user->leccionesCompletadas()->syncWithoutDetaching([$leccion->id]);
+
+        return back()->with('success', '¡Lección marcada como completada!');
     }
 }

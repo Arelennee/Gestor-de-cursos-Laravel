@@ -19,9 +19,23 @@ class CursoPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Curso $curso): bool
+    public function view(User $user, Curso $curso): Response
     {
-        return true;
+        // El admin o el profesor del curso siempre tienen acceso.
+        if ($user->esAdmin() || $user->id === $curso->user_id) {
+            return Response::allow();
+        }
+
+        // Hacemos una consulta directa y eficiente para ver si están inscritos.
+        $isEnrolled = $user->inscripciones()->where('curso_id', $curso->id)->exists();
+
+        if ($isEnrolled) {
+            return Response::allow();
+        }
+
+        // Si la comprobación falla, denegamos el acceso con un mensaje de depuración detallado.
+        $enrolled_courses = $user->inscripciones()->pluck('curso_id')->implode(', ');
+        return Response::deny("DEBUG: El usuario {$user->id} NO está inscrito en el curso {$curso->id}. Cursos en los que SÍ está inscrito: [{$enrolled_courses}]");
     }
 
     /**
