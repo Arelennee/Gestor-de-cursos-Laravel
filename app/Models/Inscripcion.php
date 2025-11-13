@@ -14,6 +14,7 @@ class Inscripcion extends Model
      *
      * @var array<int, string>
      */
+    protected $table = 'inscripciones';
     protected $fillable = [
         'user_id',
         'curso_id',

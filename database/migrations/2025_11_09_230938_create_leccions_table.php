@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
 {
-    Schema::create('lecciones', function (Blueprint $table) {
+    Schema::create('leccions', function (Blueprint $table) {
         $table->id();
         $table->foreignId('curso_id')->constrained()->onDelete('cascade');
         $table->string('titulo');
-        $table->text('contenido')->nullable(); // texto o descripción
-        $table->string('video_url')->nullable(); // si luego agregas videos
-        $table->integer('orden')->default(1); // posición dentro del curso
+        $table->text('contenido')->nullable(); 
+        $table->string('video_url')->nullable(); 
+        $table->integer('orden')->default(1); 
         $table->timestamps();
     });
 }

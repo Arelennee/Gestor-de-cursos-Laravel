@@ -9,6 +9,9 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    const ROL_ADMIN = 'admin';
+    const ROL_PROFESOR = 'profesor';
+    const ROL_ESTUDIANTE = 'estudiante';
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -21,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol',
     ];
 
     /**
@@ -45,6 +49,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function esAdmin()
+    {
+        return $this->rol === self::ROL_ADMIN;
+    }
+
+    public function esProfesor()
+    {
+        return $this->rol === self::ROL_PROFESOR;
+    }
+
+    public function esEstudiante()
+    {
+        return $this->rol === self::ROL_ESTUDIANTE;
+    }
+    
     public function cursos(){
         return $this->hasMany(Curso::class);
     }
@@ -57,6 +77,12 @@ class User extends Authenticatable
     public function cursosInscritos(){
         return $this->belongsToMany(Curso::class, 'inscripciones');
     }
+
+    public function leccionesCompletadas()
+    {
+        return $this->belongsToMany(Leccion::class, 'leccion_user')->withTimestamps();
+    }
+
     public function comentarios(){
         return $this->hasMany(Comentario::class);
     }
